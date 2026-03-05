@@ -1,61 +1,88 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from 'react';
+import './App.css';
+import { NavLink } from 'react-bootstrap';
 
-const URL = "https://www.thecocktaildb.com/api/json/v1/1/search.php?s=";
+function Crudoperations() {
+    const [input, setInput] = useState('');
+    const [items, setItems] = useState([]);
+    const [editIndex, setEditIndex] = useState(null);
 
-const CocktailApi = () => {
-    const [data, setdata] = useState([]);
-    const [searchdrink, setSearchdrink] = useState('');
-
-    const fetchDrinks = async (apiURL) => {
-        const response = await fetch(apiURL);
-        const { drinks } = await response.json();
-        setdata(drinks);
-    }; 
-
-    const handlechange = (e) => {
+    // Handle input change
+    const handleInputChange = (event) => {
+        setInput(event.target.value);
+    };
+    // Add item to the list
+    const handleSubmit = (e) => {
         e.preventDefault();
-        let event = e.target.value;
-        setSearchdrink(event);
-    }
+        if (editIndex === null) {
+            setItems([...items, input]);
+        } else {
+            const updatedTasks = items.map((task, index) =>
+                index === editIndex ? input : task
+            );
+            setItems(updatedTasks);
+            setEditIndex(null);
+        }
+        setInput('');
+    };
+    // Edit an item from the list
+    const handleEditItem = (index) => {
+        setInput(items[index]);
+        setEditIndex(index);
+    };
 
-    useEffect(() => {
-        const correctURL = `${URL}${searchdrink}`
-        fetchDrinks(correctURL);
-    }, [searchdrink])
+    // Delete an item from the list
+    const handleDeleteItem = (index) => {
+        setItems(items.filter((_, i) => i !== index));
+    };
+
     return (
-        <div>
-            <center>
-                <form>
-                    <input
-                        type="text"
-                        name="search"
-                        id="search"
-                        placeholder="search drink"
-                        value={searchdrink}
-                        onChange={handlechange}
-                    />
-                </form>
-                <hr />
-                <ul className="cocktail-data">
-                    {
-                        data.map((eachobj) => {
-                            const { idDrink, strDrink, strDrinkThumb } = eachobj
-                            return (
-                                <li key={idDrink}>
-                                    <div>
-                                        <img src={strDrinkThumb} alt={strDrink} />
-                                    </div>
-                                    <div className="text">
-                                        {strDrink}
-                                    </div>
-                                </li>
+        <div className="App">
+            <h2>michaels arts & crafts</h2>
+            <div>
+                <input
+                    type="text"
+                    value={input}
+                    onChange={handleInputChange}
+                    placeholder="Enter item"
+                    style={{
+                        color: "black",
+                        padding: "8px 16px",
+                        borderRadius: "5px",
+                    }}
+                /> &nbsp;
+                <button onClick={handleSubmit} style={{
+                    backgroundColor: "blue",
+                    color: "white",
+                    padding: "8px 16px",
+                    border: "none",
+                    borderRadius: "5px",
+                    cursor: "pointer"
+                }}>
+                    {editIndex !== null ? 'Update Item' : 'Add Item'}
+                </button>
+            </div>
+            <ul>
+                {items.map((item, index) => (
+                    <li key={index}>
+                        {item} &nbsp;
+                        <button onClick={() => handleEditItem(index)} style={{
+                            color: "black",
+                            padding: "8px 16px",
+                            borderRadius: "5px",
 
-                            )
-                        })
-                    }
-                </ul>
-            </center>
-        </div >
+                        }}>Edit</button>&nbsp;
+                        <button onClick={() => handleDeleteItem(index)} style={{
+                            color: "black",
+                            padding: "8px 16px",
+                            borderRadius: "5px",
+
+                        }}>Delete</button>
+                    </li>
+                ))}
+            </ul>
+        </div>
     );
-};
-export default CocktailApi;
+}
+
+export default Crudoperations;
