@@ -38,13 +38,18 @@ function Crudoperations() {
 
     return (
         <div className="App">
-            <h2>michaels arts & crafts</h2>
+            <h1 style={{
+                color: "black",
+                padding: "10px 5px",
+                borderRadius: "2px",
+                backgroundColor: "pink"
+            }}>michael's arts & crafts</h1>
             <div>
                 <input
                     type="text"
                     value={input}
                     onChange={handleInputChange}
-                    placeholder="Enter item"
+                    placeholder="please enter product name "
                     style={{
                         color: "black",
                         padding: "8px 16px",
@@ -65,17 +70,19 @@ function Crudoperations() {
             <ul>
                 {items.map((item, index) => (
                     <li key={index}>
-                        {item} &nbsp;
+                        <b>{item}</b> &nbsp;
                         <button onClick={() => handleEditItem(index)} style={{
                             color: "black",
                             padding: "8px 16px",
                             borderRadius: "5px",
+                            backgroundColor: "pink",
 
                         }}>Edit</button>&nbsp;
                         <button onClick={() => handleDeleteItem(index)} style={{
                             color: "black",
                             padding: "8px 16px",
                             borderRadius: "5px",
+                            backgroundColor: "orange"
 
                         }}>Delete</button>
                     </li>
