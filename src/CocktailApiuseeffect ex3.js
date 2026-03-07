@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import './App.css';
-import { NavLink } from 'react-bootstrap';
 
 function Crudoperations() {
     const [input, setInput] = useState('');
