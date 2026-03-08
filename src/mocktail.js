@@ -36,7 +36,7 @@ const CocktailApi = () => {
                         style={{
                         color: "black",
                         padding: "12px 20px",
-                        borderRadius: "15px",
+                        borderRadius: "14px",
                         borderBlockColor: "blue"
                     }}
                     />
