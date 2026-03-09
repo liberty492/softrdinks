@@ -1,5 +1,4 @@
 import './App.css';
-import Final from './mocktail';
 import Crudoperations from './CocktailApiuseeffect ex3';
 
 
