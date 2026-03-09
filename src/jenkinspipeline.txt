@@ -1,0 +1,224 @@
+React + Jenkins + Nginx full deployment (real project)
+
+Here is a Real Project Deployment Architecture: React + Jenkins + Nginx (CI/CD Pipeline). This is the same process used in many DevOps projects and also useful for interview explanations.
+
+1️⃣ Project Architecture
+Developer → GitHub → Jenkins → Build React App → Nginx Server → Public Users
+
+Flow:
+
+Developer pushes code → GitHub
+        ↓
+GitHub webhook triggers Jenkins
+        ↓
+Jenkins builds React application
+        ↓
+Build files copied to Nginx
+        ↓
+Application available on Public IP
+2️⃣ Server Requirements
+
+Create an AWS EC2 instance (Amazon Linux / Ubuntu).
+
+Install required tools:
+
+sudo yum update -y
+
+Install Git
+
+sudo yum install git -y
+
+Install NodeJS
+
+curl -fsSL https://rpm.nodesource.com/setup_18.x | sudo bash -
+sudo yum install nodejs -y
+
+Check version
+
+node -v
+npm -v
+3️⃣ Install Jenkins
+
+Install Java:
+
+sudo yum install java-17-amazon-corretto -y
+
+Install Jenkins:
+
+sudo wget -O /etc/yum.repos.d/jenkins.repo \
+https://pkg.jenkins.io/redhat-stable/jenkins.repo
+sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+sudo yum install jenkins -y
+
+Start Jenkins
+
+sudo systemctl start jenkins
+sudo systemctl enable jenkins
+
+Access Jenkins:
+
+http://YOUR_PUBLIC_IP:8080
+4️⃣ Install Nginx (Web Server)
+sudo yum install nginx -y
+
+Start Nginx
+
+sudo systemctl start nginx
+sudo systemctl enable nginx
+
+Check in browser:
+
+http://YOUR_PUBLIC_IP
+
+You should see Nginx Welcome Page.
+
+5️⃣ Create React Application
+
+On local machine:
+
+npx create-react-app react-cicd-app
+cd react-cicd-app
+
+Test locally:
+
+npm start
+
+Push code to GitHub.
+
+6️⃣ Push Code to GitHub
+git init
+git add .
+git commit -m "React CI/CD Project"
+git remote add origin https://github.com/username/react-cicd-app.git
+git push -u origin main
+7️⃣ Install Jenkins Plugins
+
+Go to
+
+Manage Jenkins → Plugins
+
+Install:
+
+Git Plugin
+
+NodeJS Plugin
+
+Pipeline Plugin
+
+GitHub Plugin
+
+8️⃣ Configure NodeJS in Jenkins
+
+Go to:
+
+Manage Jenkins → Global Tool Configuration
+
+Add NodeJS:
+
+Name: Node18
+Version: NodeJS 18
+9️⃣ Create Jenkins Pipeline Job
+New Item → Pipeline → React-Deployment
+
+Pipeline → Pipeline script from SCM
+
+SCM: Git
+Repository URL: https://github.com/username/react-cicd-app.git
+Branch: main
+🔟 Create Jenkinsfile in Project
+
+Inside your project root create:
+
+Jenkinsfile
+
+Example:
+
+pipeline {
+    agent any
+
+    tools {
+        nodejs "Node18"
+    }
+
+    stages {
+
+        stage('Clone Code') {
+            steps {
+                git branch: 'main', url: 'https://github.com/liberty492/softrdinks.git'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh 'npm install'
+            }
+        }
+
+        stage('Build React App') {
+            steps {
+                sh 'npm run build'
+            }
+        }
+
+        stage('Deploy to Nginx') {
+            steps {
+                sh '''
+                sudo rm -rf /usr/share/nginx/html/*
+                sudo cp -r build/* /usr/share/nginx/html/
+                '''
+            }
+        }
+    }
+}
+1️⃣1️⃣ Configure GitHub Webhook
+
+Go to GitHub repository:
+
+Settings → Webhooks
+
+Add webhook:
+
+http://JENKINS-IP:8080/github-webhook/
+
+Now every git push triggers Jenkins automatically.
+
+1️⃣2️⃣ Final Deployment
+
+Run Jenkins build.
+
+After successful build open browser:
+
+http://EC2-PUBLIC-IP
+
+Your React application will be live on Nginx server.
+
+📊 Real CI/CD Flow
+Developer pushes code
+        ↓
+GitHub Repository
+        ↓
+Webhook triggers Jenkins
+        ↓
+Jenkins pulls code
+        ↓
+npm install
+        ↓
+npm run build
+        ↓
+Copy build files to Nginx
+        ↓
+Application live on Public Server
+🔥 Real DevOps Interview Explanation
+
+You can say:
+
+“In our project, we used Jenkins to automate React application deployment. Developers push code to GitHub, which triggers Jenkins through webhooks. Jenkins pulls the latest code, installs dependencies using npm, builds the React application using npm run build, and deploys the static build files to the Nginx web server directory /usr/share/nginx/html. This enables automatic CI/CD deployment of the React application to a public server.”
+
+✅ If you want, I can also show you very important advanced setups used in companies:
+
+1️⃣ React + Jenkins + Docker + Nginx deployment
+2️⃣ React deployment using Jenkins pipeline (production level)
+3️⃣ React deployment with Domain + SSL (HTTPS)
+4️⃣ Complete DevOps Project (React + Node + MongoDB + Jenkins + AWS)
+
+These are very powerful for DevOps interviews. 🚀
