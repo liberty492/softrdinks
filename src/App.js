@@ -1,13 +1,13 @@
 import './App.css';
 import Final from './mocktail';
-import CocktailApi from './mocktail';
+import Crudoperations from './CocktailApiuseeffect ex3';
 
 
 function App() {
 
   return (
     <div className='App'>
-      <Final />
+      <Crudoperations />
     </div>
   );
 }
